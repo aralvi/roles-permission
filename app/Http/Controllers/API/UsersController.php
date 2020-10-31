@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Traits\HasRoles;
 
 class UsersController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +19,7 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::with('roles')->get();
-        return view('admin.users.index',compact('users'));
+        return response()->json(['users'=>$users]);
     }
 
     /**
@@ -32,7 +30,7 @@ class UsersController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('admin.users.create',compact('roles'));
+        return response()->json(['roles' => $roles]);
     }
 
     /**
@@ -43,16 +41,26 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:users',
+            'password' => 'required|string|confirmed|min:6',
+        ]);
 
-dd($request->all());
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
         $user = new User();
-        $user->name = $request->first_name .' '. $request->last_name;
+        $user->name = $request->name ;
         $user->email = $request->email;
-        $user->password = Hash::make($request->password) ;
+        $user->password = Hash::make($request->password);
         $role = Role::findById($request->role);
         $user->assignRole($role);
         $user->save();
-        return back();
+        return response()->json([
+            'message' => 'User successfully created',
+            'user' => $user
+        ], 201);
     }
 
     /**
@@ -76,7 +84,7 @@ dd($request->all());
     {
         $user = User::findOrFail($id);
         $roles = Role::all();
-        return view('admin.users.edit',compact('user','roles'));
+        return response()->json(['user' => $user,'roles'=>$roles]);
     }
 
     /**
@@ -88,14 +96,26 @@ dd($request->all());
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100',
+            'password' => 'required|string|confirmed|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $role = Role::findById($request->role);
-        $user->syncRoles($role);
+        $user->assignRole($role);
         $user->save();
-        return redirect('users');
+        return response()->json([
+            'message' => 'User successfully updated',
+            'user' => $user
+        ], 201);
     }
 
     /**
