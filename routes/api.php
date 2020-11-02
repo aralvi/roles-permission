@@ -19,19 +19,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group([
-
-    'middleware' => 'api',
-    // 'namespace' => 'App\Http\Controllers\API',
-    'prefix' => 'auth'
-
-], function ($router) {
+Route::group(['middleware' => 'api','namespace' => 'App\Http\Controllers\API','prefix' => 'auth'], function ($router) {
 
     Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('login', [App\Http\Controllers\API\AuthController::class, 'login']);
     Route::post('logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
     Route::post('refresh', [App\Http\Controllers\API\AuthController::class, 'refresh']);
     Route::post('me', [App\Http\Controllers\API\AuthController::class, 'me']);
+    Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify'); // Make sure to keep this as your route name
+
+    Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
@@ -40,5 +37,31 @@ Route::get('users/create', [App\Http\Controllers\API\UsersController::class,'cre
 Route::post('users/store', [App\Http\Controllers\API\UsersController::class,'store'])->middleware('permission:create user');
 Route::get('users/edit/{id}', [App\Http\Controllers\API\UsersController::class,'edit']);
 Route::patch('users/update/{id}', [App\Http\Controllers\API\UsersController::class,'update']);
+    
+
+    Route::get('/profile', [App\Http\Controllers\API\ProfileController::class, 'profile']);
+    Route::patch('/profile', [App\Http\Controllers\API\ProfileController::class, 'update_profile']);
+    Route::post('/profile/change_avatar', [App\Http\Controllers\API\ProfileController::class, 'update_avatar']);
+
+    Route::get('/password', [App\Http\Controllers\API\ProfileController::class, 'password']);
+    Route::post('/password', [App\Http\Controllers\API\ProfileController::class, 'update_password']);
+
+
+
+Route::group(['middleware' => ['role:admin']], function () {
+    Route::get('roles',[App\Http\Controllers\API\RolesController::class, 'index']);
+    Route::post('roles/store',[App\Http\Controllers\API\RolesController::class, 'store']);
+    // Route::get('roles/edit/{id}',[App\Http\Controllers\API\RolesController::class, 'edit']);
+    Route::delete('roles/delete/{id}',[App\Http\Controllers\API\PermissionsController::class, 'destroy']);
+    Route::get('permissions',[App\Http\Controllers\API\PermissionsController::class, 'index']);
+    Route::post('permissions/store',[App\Http\Controllers\API\PermissionsController::class, 'store']);
+    // Route::get('permissions/edit/{id}',[App\Http\Controllers\API\PermissionsController::class, 'edit']);
+    Route::delete('permissions/delete/{id}',[App\Http\Controllers\API\PermissionsController::class, 'destroy']);
+
+
+    Route::get('role-permissions',[App\Http\Controllers\API\AssignPermissionRoleController::class, 'create']);
+    Route::post('role-permissions/assign',[App\Http\Controllers\API\AssignPermissionRoleController::class, 'store']);
+});
+
 });
 
