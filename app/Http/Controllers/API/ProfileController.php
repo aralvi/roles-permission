@@ -67,7 +67,7 @@ class ProfileController extends Controller
         if (!empty($old_avatar)) {
             unlink(public_path("/uploads/images/user/avatars/$old_avatar"));
         }
-        return response()->json(['success'=> 'Profile image updated successfully!']);
+        return response()->json(['destination'=> '/uploads/images/user/avatars/'.$profile->avatar]);
     }
 
 

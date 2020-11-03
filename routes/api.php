@@ -33,11 +33,12 @@ Route::group(['middleware' => 'api','namespace' => 'App\Http\Controllers\API','p
 
 Route::group(['middleware' => ['auth:api']], function () {
 Route::get('users', [App\Http\Controllers\API\UsersController::class,'index']);
-Route::get('users/create', [App\Http\Controllers\API\UsersController::class,'create'])->middleware('permission:create user');
-Route::post('users/store', [App\Http\Controllers\API\UsersController::class,'store'])->middleware('permission:create user');
+Route::get('users/create', [App\Http\Controllers\API\UsersController::class,'create'])->middleware('role:admin');
+Route::post('users/store', [App\Http\Controllers\API\UsersController::class,'store'])->middleware('role:admin');
 Route::get('users/edit/{id}', [App\Http\Controllers\API\UsersController::class,'edit']);
 Route::patch('users/update/{id}', [App\Http\Controllers\API\UsersController::class,'update']);
-    
+Route::delete('users/delete/{id}', [App\Http\Controllers\API\UsersController::class,'destroy']);
+
 
     Route::get('/profile', [App\Http\Controllers\API\ProfileController::class, 'profile']);
     Route::patch('/profile', [App\Http\Controllers\API\ProfileController::class, 'update_profile']);
@@ -52,7 +53,7 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::get('roles',[App\Http\Controllers\API\RolesController::class, 'index']);
     Route::post('roles/store',[App\Http\Controllers\API\RolesController::class, 'store']);
     // Route::get('roles/edit/{id}',[App\Http\Controllers\API\RolesController::class, 'edit']);
-    Route::delete('roles/delete/{id}',[App\Http\Controllers\API\PermissionsController::class, 'destroy']);
+    Route::delete('roles/delete/{id}',[App\Http\Controllers\API\RolesController::class, 'destroy']);
     Route::get('permissions',[App\Http\Controllers\API\PermissionsController::class, 'index']);
     Route::post('permissions/store',[App\Http\Controllers\API\PermissionsController::class, 'store']);
     // Route::get('permissions/edit/{id}',[App\Http\Controllers\API\PermissionsController::class, 'edit']);
