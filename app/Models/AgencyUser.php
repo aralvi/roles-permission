@@ -12,7 +12,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class AgencyUser extends Authenticatable implements MustVerifyEmail,JWTSubject
 {
     use HasFactory, Notifiable, HasRoles;
-    
+
     protected $guard = 'agency';
     /**
      * The attributes that are mass assignable.
@@ -62,5 +62,14 @@ class AgencyUser extends Authenticatable implements MustVerifyEmail,JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function Agencies()
+    {
+        return $this->belongsToMany(Agency::class, 'agency_user_agencies', 'agency_user_id', 'agency_id');
+    }
+    public function AgencyRole()
+    {
+        return $this->belongsToMany(Agency::class, 'agency_user_agency_roles', 'agency_user_agency_id', 'role_id');
     }
 }

@@ -59,37 +59,10 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'email' => 'required|email',
-        //     'password' => 'required|string|min:6',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors()->toJson(), 400);
-        // }
-        // $email = $request->email;
-        // $password = Hash::make($request->password);
-
-        // $user = AgencyUser::where('email',$email)->first();
-        // if($token = ($user->password == $password)){
-        //     return $this->respondWithToken($token);
-
-        // }
-        // $credentials = $request->only('email', 'password');
-
-        // if ($token = $this->guard('agency_users')->attempt($credentials)) {
-        //     return $this->respondWithToken($token);
-        // }
-
         $credentials = $request->only('email', 'password');
-
         if ($token = Auth::guard('agency')->attempt($credentials)) {
             return $this->respondWithToken($token);
         }
-
-        //Authentication failed...
-        // return $this->loginFailed();
-
         return response()->json(['error' => 'Unauthorized'], 401);
 
     }
@@ -133,7 +106,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json($this->guard('agency')->user());
+        return response()->json($this->guard('agency')->user()->Agencies);
     }
     /**
      * Log the user out (Invalidate the token)

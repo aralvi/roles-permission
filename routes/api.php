@@ -66,14 +66,23 @@ Route::group(['middleware' => ['role:admin']], function () {
 
 });
 
-Route::middleware('auth:agency')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 Route::group(['prefix' => 'agency'], function ($router) {
 
     Route::post('/register', [App\Http\Controllers\API\Agency\AuthController::class, 'register']);
     Route::post('login',  [App\Http\Controllers\API\Agency\AuthController::class, 'login']);
-    Route::post('logout',  [App\Http\Controllers\API\Agency\AuthController::class, 'logout']);
+    Route::group( ['middleware' => ['auth:agency']], function () {
+        Route::get('me', [App\Http\Controllers\API\Agency\AuthController::class, 'me']);
+
+        Route::post('logout',  [App\Http\Controllers\API\Agency\AuthController::class, 'logout']);
+
+        Route::get('agencies',[\App\Http\Controllers\API\Agency\AgeciesController::class,'index']);
+        Route::get('agencies/create',[\App\Http\Controllers\API\Agency\AgeciesController::class,'create']);
+        Route::post('agencies/store',[\App\Http\Controllers\API\Agency\AgeciesController::class,'store']);
+        Route::delete('agencies/{id}/delete',[\App\Http\Controllers\API\Agency\AgeciesController::class,'destroy']);
+
+
+    });
 
 
 });
