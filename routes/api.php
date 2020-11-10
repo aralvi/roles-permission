@@ -66,3 +66,14 @@ Route::group(['middleware' => ['role:admin']], function () {
 
 });
 
+Route::middleware('auth:agency')->get('/user', function (Request $request) {
+    return $request->user();
+});
+Route::group(['prefix' => 'agency'], function ($router) {
+
+    Route::post('/register', [App\Http\Controllers\API\Agency\AuthController::class, 'register']);
+    Route::post('login',  [App\Http\Controllers\API\Agency\AuthController::class, 'login']);
+    Route::post('logout',  [App\Http\Controllers\API\Agency\AuthController::class, 'logout']);
+
+
+});
