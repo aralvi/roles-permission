@@ -20,7 +20,7 @@ class AgeciesController extends Controller
      */
     public function index()
     {
-        $agencies = Agency::all();
+        $agencies = Agency::with('AgencyRoles')->get();
         return response()->json(['agencies'=>$agencies]);
     }
 
@@ -81,7 +81,8 @@ class AgeciesController extends Controller
      */
     public function show($id)
     {
-        //
+        $agency = Agency::where('id',$id)->with('AgencyRoles')->get();
+        return response()->json(['agency'=> $agency]);
     }
 
     /**

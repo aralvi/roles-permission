@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class AgencyRole extends Model
 {
     use HasFactory;
+    public function Agencies()
+    {
+        return $this->belongsTo(Agency::class);
+    }
 }

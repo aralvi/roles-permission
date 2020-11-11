@@ -12,4 +12,8 @@ class Agency extends Model
     {
         return $this->belongsToMany(AgencyUser::class, 'agency_user_agencies', 'user_id', 'agency_id');
     }
+    public function AgencyRoles()
+    {
+        return $this->hasMany(AgencyRole::class);
+    }
 }

@@ -77,6 +77,7 @@ Route::group(['prefix' => 'agency'], function ($router) {
         Route::post('logout',  [App\Http\Controllers\API\Agency\AuthController::class, 'logout']);
 
         Route::get('agencies',[\App\Http\Controllers\API\Agency\AgeciesController::class,'index']);
+        Route::get('agencies/{id}/show',[\App\Http\Controllers\API\Agency\AgeciesController::class,'show']);
         Route::get('agencies/create',[\App\Http\Controllers\API\Agency\AgeciesController::class,'create']);
         Route::post('agencies/store',[\App\Http\Controllers\API\Agency\AgeciesController::class,'store']);
         Route::delete('agencies/{id}/delete',[\App\Http\Controllers\API\Agency\AgeciesController::class,'destroy']);
