@@ -76,14 +76,20 @@ Route::group(['prefix' => 'agency'], function ($router) {
 
         Route::post('logout',  [App\Http\Controllers\API\Agency\AuthController::class, 'logout']);
 
-        Route::get('agencies',[\App\Http\Controllers\API\Agency\AgeciesController::class,'index']);
-        Route::get('agencies/{id}/show',[\App\Http\Controllers\API\Agency\AgeciesController::class,'show']);
-        Route::get('agencies/{id}/edit',[\App\Http\Controllers\API\Agency\AgeciesController::class,'edit']);
-        Route::get('agencies/create',[\App\Http\Controllers\API\Agency\AgeciesController::class,'create']);
-        Route::post('agencies/store',[\App\Http\Controllers\API\Agency\AgeciesController::class,'store']);
-        Route::patch('agencies/{id}/update',[\App\Http\Controllers\API\Agency\AgeciesController::class,'update']);
-        Route::delete('agencies/{id}/delete',[\App\Http\Controllers\API\Agency\AgeciesController::class,'destroy']);
+        Route::get('agencies',[App\Http\Controllers\API\Agency\AgeciesController::class,'index']);
+        Route::get('agencies/{id}/show',[App\Http\Controllers\API\Agency\AgeciesController::class,'show']);
+        Route::get('agencies/{id}/edit',[App\Http\Controllers\API\Agency\AgeciesController::class,'edit']);
+        Route::get('agencies/create',[App\Http\Controllers\API\Agency\AgeciesController::class,'create']);
+        Route::post('agencies/store',[App\Http\Controllers\API\Agency\AgeciesController::class,'store']);
+        Route::patch('agencies/{id}/update',[App\Http\Controllers\API\Agency\AgeciesController::class,'update']);
+        Route::delete('agencies/{id}/delete',[App\Http\Controllers\API\Agency\AgeciesController::class,'destroy']);
 
+        Route::get('{id}/agency-roles', [App\Http\Controllers\API\Agency\AgecyRolesController::class, 'index']);
+        Route::get('{id}/agency-roles/create', [App\Http\Controllers\API\Agency\AgecyRolesController::class, 'create']);
+        Route::post('agency-roles/store', [App\Http\Controllers\API\Agency\AgecyRolesController::class, 'store']);
+        Route::get('agency-roles/{id}/edit', [App\Http\Controllers\API\Agency\AgecyRolesController::class, 'edit']);
+        Route::patch('agency-roles/{id}/update', [App\Http\Controllers\API\Agency\AgecyRolesController::class, 'update']);
+        Route::delete('agency-roles/{id}/delete', [App\Http\Controllers\API\Agency\AgecyRolesController::class, 'destroy']);
 
     });
 
