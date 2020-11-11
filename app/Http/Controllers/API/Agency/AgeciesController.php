@@ -93,7 +93,9 @@ class AgeciesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $agency  = Agency::findOrFail($id);
+        return response()->json(['agency' => $agency]);
+
     }
 
     /**
@@ -105,7 +107,16 @@ class AgeciesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|unique:agencies|between:2,100',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        $agency  = Agency::findOrFail($id);
+        $agency->name = $request->name;
+        $agency->save();
+        return response()->json(['agency' => $agency]);
     }
 
     /**
